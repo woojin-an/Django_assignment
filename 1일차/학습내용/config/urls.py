@@ -19,7 +19,7 @@ from django.urls import path
 from django.http import HttpResponse,Http404
 from django.shortcuts import render
 
-movie_list = [
+movie_list = [ #추가 가능
     {'title': '파묘', 'director': '장재현'},
     {'title': '웡카', 'director': '폴 킹'},
     {'title': '듄: 파트 2', 'director': '드니 빌뇌브'},
@@ -72,7 +72,7 @@ def movie_detail(request, index):
     context = {'movie': movie, 'index': index}
     return render(request, template_name='../templates/movie.html', context=context)
 
-
+#url 추가 영역
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
