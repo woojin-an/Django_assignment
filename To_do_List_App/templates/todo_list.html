@@ -60,22 +60,78 @@
         .admin-button:hover {
             background-color: #444444;
         }
+        nav {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+        .nav-links a {
+            color: #ffffff;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #bb86fc;
+        }
+        .logout-button {
+            border: none;
+            background: none;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .logout-button:hover {
+            color: #bb86fc;
+        }
     </style>
 </head>
 <body>
-    <h1>Todo List</h1>
+
+    <nav>
+        {% if request.user.is_authenticated %}
+            <div style="font-size: 1rem;">
+                {{ request.user.username }}
+            </div>
+            <div class="nav-links">
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button class="logout-button">Logout</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="nav-links">
+                <a href="{% url 'signup' %}">SignUp</a>
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+        {% endif %}
+    </nav>
+
+    <h1>{% if request.user.is_authenticated %}{{ request.user.username }}의{% endif %} Todo List</h1>
 
     <ul>
-        {% for item in data %}
-        <li>
-            <span>{{ item.title }}</span>
-            <a href="{% url 'todo_info' item.id %}">Details</a>
-        </li>
-        {% empty %}
-        <li>No todos available</li>
-        {% endfor %}
+        {% if request.user.is_authenticated %}
+            {% for item in data %}
+            <li>
+                <span>{{ item.title }}</span>
+                <a href="{% url 'todo_info' item.id %}">Details</a>
+            </li>
+            {% empty %}
+            <li>No todos available</li>
+            {% endfor %}
+        {% else %}
+            <li>회원가입 또는 로그인을 진행해주세요.</li>
+        {% endif %}
     </ul>
 
     <a href="/admin/" class="admin-button">Todo list 등록<br>(admin page)</a>
+
 </body>
 </html>
