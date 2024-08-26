@@ -20,26 +20,34 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3u51zsw%_ik2_af*m&m937w&sai!5)f=wrz*00=121vmulo2)3'
+SECRET_KEY = 'django-insecure-kmwki!xigxss+!)x&vnjcqg=yy9o(uioh=4ti-x0n!qmdcho&-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-# Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'todo',
-    'users',
 ]
+# Application definition
+
+OWN_APPS = [
+    'blog',
+    'member',
+]
+
+THIRD_PARTY_APPS = [
+    'django_extensions',
+]
+
+INSTALLED_APPS = DJANGO_APPS + OWN_APPS + THIRD_PARTY_APPS
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -124,6 +132,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# login / logout
-LOGIN_REDIRECT_URL = '/todo/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+# login
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
