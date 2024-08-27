@@ -5,7 +5,7 @@
 {% block content %}
     <nav style="display: flex; justify-content: space-between; ">
 {# 로그인 된 상태라면? 로그인된 아이디, 로그아웃버튼, 글쓰기 버튼 노출 #}
-        {% if request.user.is_authenticated %} 
+        {% if request.user.is_authenticated %}
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 {% if request.user.is_authenticated %}
                     <div style="font-size: 1rem; ">
@@ -26,12 +26,12 @@
                     </div>
                 {% endif %}
             </div>
-        
+
         {% endif %}
     </nav>
 
     <h1>{% if request.user.is_authenticated %}{{ request.user.username }}의{% endif %} Todo List</h1>
-{# todo list 10개씩 노출 #}
+{# to_do_list 10개 씩 노출 #}
     <ul>
         {% if request.user.is_authenticated %}
             {% for todo in page_obj %}
@@ -67,7 +67,7 @@
         {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
             <a href="?page={{  page_obj.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
         {% endif %}
-    
+
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
 
@@ -81,12 +81,12 @@
     </div>
     <div>
         <form method="get">
-        <a>제목 또는 본문을 검색: 
+        <a>제목 또는 본문을 검색:
             <label>
                 <input name='q' type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
             <button>검색</button>
             </label>
-        </a>    
+        </a>
         </form>
     </div>
 {% endblock %}
