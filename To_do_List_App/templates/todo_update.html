@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}Todo Update{% endblock %}
 
 {% block content %}
-    <h1>회원가입</h1>
+    <h1>Todo 수정</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="submit-button">Sign Up</button>
+        <button type="submit" class="submit-button">Update Todo</button>
     </form>
 {% endblock %}
