@@ -1,4 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
+
+User = get_user_model()
+
 
 class Blog(models.Model):
     CATEGORY_CHOICES = (
@@ -10,7 +14,10 @@ class Blog(models.Model):
     category = models.CharField('카테고리', max_length=15, choices=CATEGORY_CHOICES)
     title = models.CharField('제목', max_length=100)
     content = models.TextField('본문')
-    # 작성자는 패스 (추후 업데이트)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    # models.CASCAED --> 같이 삭제됨
+    # models.PROTECT --> 삭제가 불가능함 (유저를 삭제하려고 할 때 블로그가 있으면 유저 삭제 불가능)
+    # models.SET_NULL --> 유저 삭제 시 블로그의 author가 NULL이 됨 (뒤에 null=True 필요함)
     created_at = models.DateTimeField('작성일자', auto_now_add=True)
     updated_at = models.DateTimeField('작성일자', auto_now=True)
 

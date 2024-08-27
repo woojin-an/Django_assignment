@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <nav>
+        <div style="display: flex; justify-content: space-between">
+            <a href="{% url "blog_list" %}">홈으로</a>
+        </div>
+        <div style="text-align: right">
+            <!-- 로그인 되어있을 때 로그아웃 버튼과 ID 나타내기 -->
+            {% if request.user.is_authenticated %}
+                {{ request.user.username }}
+                <form action="{% url 'logout' %}" method="POST" style="display: inline">
+                    {% csrf_token %}
+                    <button>로그아웃</button>
+                </form>
+
+            <!-- 로그인 되어있지 않을 때 로그인 버튼 나타내기-->
+            {% else %}
+                <a href="{% url 'login' %}">로그인</a>
+                <a href="{% url 'signup' %}">회원가입</a>
+            {% endif %}
+
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+</body>
+</html>

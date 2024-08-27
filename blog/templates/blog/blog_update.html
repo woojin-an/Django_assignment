@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>블로그 수정</h1>
+    <div style="text-align: right">
+        <p>작성일자: {{ blog.created_at|date:"Y년 n월 j일 A h시 i분" }}</p>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>블로그 수정</button>
+
+    </form>
+{% endblock %}

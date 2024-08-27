@@ -1,36 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <nav>
-        <div style="text-align: right">
-            <!-- 로그인 되어있을 때 로그아웃 버튼과 ID 나타내기 -->
-            {% if request.user.is_authenticated %}
-                {{ request.user.username }}
-                <form action="{% url 'logout' %}" method="POST" style="display: inline">
-                    {% csrf_token %}
-                    <button>로그아웃</button>
-                </form>
-
-            <!-- 로그인 되어있지 않을 때 로그인 버튼 나타내기-->
-            {% else %}
-                <a href="{% url 'login' %}">로그인</a>
-                <a href="{% url 'signup' %}">회원가입</a>
-            {% endif %}
-
-        </div>
-    </nav>
-    <h1>블로그 목록</h1>
-    {% for blog in blogs %}
+{% extends 'base.html' %}
+{% block content %}
+<style>
+#pageSelect {
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 16px;
+}
+</style>
+<h1>블로그 목록</h1>
+    <p style="text-align: right;">
+        <a href="{% url 'blog_create' %}">글 작성</a>
+    </p>
+    {% for blog in page_object %}
         <p>
             <a href="{% url 'blog_detail' blog.pk %}">
-                {{ blog.get_category_display }}: {{ blog.title }} - <small>{{ blog.created_at | date:"Y-m-d"}}</small>
+                ({{ blog.id }}){{ blog.get_category_display }}: {{ blog.title }} <span>({{ blog.author.username }})</span> - <small>{{ blog.created_at | date:"Y-m-d"}}</small>
             </a>
         </p>
 
     {% endfor %}
-</body>
-</html>
+
+    <form method="get">
+        <a>제목 또는 본문을 검색: </a>
+        <input name='q' type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+        <button>검색</button>
+    </form>
+
+    <div>
+        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" >&laquo; 첫번째</a>
+        {% if page_object.has_previous %}
+            <a href="?page={{ page_object.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+        {% endif %}
+    {# 현재페이지 -2 가 1 보다 크면 #}
+        {% if page_object.number|add:-2 > 1 %}
+            <a href="?page={{  page_object.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
+        {% endif %}
+
+        {% for i in page_object.paginator.page_range %}
+            {% if page_object.number == i %}
+                <span style="font-weight: bold"> {{ page_object.number }} </span>
+            {% elif i > page_object.number|add:-3 and i < page_object.number|add:3 %}
+                <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+    {# 최대페이지 > 현재페이지+2 일때 #}
+        {% if page_object.paginator.num_pages > page_object.number|add:2 %}
+            <a href="?page={{  page_object.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
+        {% endif %}
+
+        {% if page_object.has_next %}
+            <a href="?page={{ page_object.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
+
+        {% endif %}
+        <a href="?page={{ page_object.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">마지막 &raquo;</a>
+        <select id="pageSelect" onchange="location.href='?page=' + this.value;">
+            {% for i in page_object.paginator.page_range %}
+                <option value="{{ i }}" {% if page_object.number == i %}selected{% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}

@@ -1,13 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>{{ blog.title }}</h1>
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ blog.title }}</h1>
+    {% if request.user == blog.author %}
+        <div style="text-align: right">
+            <button href="{% url 'blog_update' blog.pk %}">수정</button>
+            <form action="{% url 'blog_delete' blog.pk %}" method="POST" style="display: inline-block;" onclick="return confirm('정말 삭제하시겠습니까?');">
+                {% csrf_token %}
+                <button>삭제</button>
+            </form>
+        </div>
+    {% endif %}
+    <div style="text-align: right">
+        작성자: {{ blog.author.username }}
+    </div>
+    <hr>
     <p>{{ blog.content }}</p>
 
     <a href="{% url 'blog_list' %}">목록으로 돌아가기</a>
-</body>
-</html>
+{% endblock %}
