@@ -1,137 +1,94 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            position: relative;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            max-width: 500px;
-        }
-        li {
-            background-color: #1f1f1f;
-            margin: 0.5rem 0;
-            padding: 1rem;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.3s ease;
-        }
-        li:hover {
-            background-color: #333333;
-        }
-        a {
-            color: #bb86fc;
-            text-decoration: none;
-        }
-        .admin-button {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background-color: #333333;
-            color: #ffffff;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-        .admin-button:hover {
-            background-color: #444444;
-        }
-        nav {
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-        }
-        .nav-links {
-            display: flex;
-            gap: 10px;
-        }
-        .nav-links a {
-            color: #ffffff;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .nav-links a:hover {
-            color: #bb86fc;
-        }
-        .logout-button {
-            border: none;
-            background: none;
-            color: #ffffff;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .logout-button:hover {
-            color: #bb86fc;
-        }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <nav>
+{% block title %}Todo List{% endblock %}
+
+{% block content %}
+    <nav style="display: flex; justify-content: space-between; ">
+{# 로그인 된 상태라면? 로그인된 아이디, 로그아웃버튼, 글쓰기 버튼 노출 #}
         {% if request.user.is_authenticated %}
-            <div style="font-size: 1rem;">
-                {{ request.user.username }}
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                {% if request.user.is_authenticated %}
+                    <div style="font-size: 1rem; ">
+                        {{ request.user.username }}
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; flex: 1;">
+                        <form action="{% url 'logout' %}" method="POST">
+                            {% csrf_token %}
+                            <button class="nav-button">Logout</button>
+                        </form>
+                        <a href="{% url 'todo_create' %}" class="nav-button">글쓰기</a>
+                    </div>
+{#  로그인 되지 않은 상태라면 로그인 버튼과 회원가입 버튼 노출#}
+                {% else %}
+                    <div style="display: flex; gap: 10px;">
+                        <a href="{% url 'login' %}" class="nav-button">Login</a>
+                        <a href="{% url 'signup' %}" class="nav-button">회원가입</a>
+                    </div>
+                {% endif %}
             </div>
-            <div class="nav-links">
-                <form action="{% url 'logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button class="logout-button">Logout</button>
-                </form>
-            </div>
-        {% else %}
-            <div class="nav-links">
-                <a href="{% url 'signup' %}">SignUp</a>
-                <a href="{% url 'login' %}">Login</a>
-            </div>
+
         {% endif %}
     </nav>
 
     <h1>{% if request.user.is_authenticated %}{{ request.user.username }}의{% endif %} Todo List</h1>
-
+{# to_do_list 10개 씩 노출 #}
     <ul>
         {% if request.user.is_authenticated %}
-            {% for item in data %}
-            <li>
-                <span>{{ item.title }}</span>
-                <a href="{% url 'todo_info' item.id %}">Details</a>
-            </li>
+            {% for todo in page_obj %}
+                <li>
+                    <span>{{ todo.title }}</span>
+                    <a href="{% url 'todo_info' todo.id %}">Details</a>
+                </li>
             {% empty %}
-            <li>No todos available</li>
+                <li>No todos available</li>
             {% endfor %}
         {% else %}
             <li>회원가입 또는 로그인을 진행해주세요.</li>
         {% endif %}
     </ul>
+    <div>
+       <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" >&laquo; 첫번째</a>
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+        {% endif %}
+    {# 현재페이지 -2 가 1 보다 크면 #}
+        {% if page_obj.number|add:-2 > 1 %}
+            <a href="?page={{  page_obj.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
+        {% endif %}
+    {#    페이지 번호 #}
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <span style="font-weight: bold"> {{ page_obj.number }} </span>
+            {% elif i > page_obj.number|add:-3 and i < page_obj.number|add:3 %}
+                <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+    {# 최대페이지 > 현재페이지+2 일때 #}
+        {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
+            <a href="?page={{  page_obj.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
+        {% endif %}
 
-    <a href="/admin/" class="admin-button">Todo list 등록<br>(admin page)</a>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
 
-</body>
-</html>
+        {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">마지막 &raquo;</a>
+        <select id="pageSelect" onchange="location.href='?page=' + this.value;">
+            {% for i in page_obj.paginator.page_range %}
+                <option value="{{ i }}" {% if page_obj.number == i %}selected{% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <form method="get">
+        <a>제목 또는 본문을 검색:
+            <label>
+                <input name='q' type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+            <button>검색</button>
+            </label>
+        </a>
+        </form>
+    </div>
+{% endblock %}
+
+

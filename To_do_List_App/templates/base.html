@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Todo Application{% endblock %}</title>
+    <style>
+        body {
+            background-color: #181818;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #222;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #00bcd4;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"], input[type="date"], textarea, select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 1rem;
+        }
+        input[type="text"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
+            border-color: #00bcd4;
+            outline: none;
+        }
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            color: #00bcd4;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+    .nav-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px ;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .nav-button:hover {
+        background-color: #0056b3;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

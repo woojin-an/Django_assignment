@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Todo Create{% endblock %}
+
+{% block content %}
+    <h1>새로운 Todo 생성</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit-button">Create Todo</button>
+    </form>
+{% endblock %}
