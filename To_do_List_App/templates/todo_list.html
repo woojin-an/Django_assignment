@@ -16,7 +16,7 @@
                             {% csrf_token %}
                             <button class="nav-button">Logout</button>
                         </form>
-                        <a href="{% url 'todo_create' %}" class="nav-button">글쓰기</a>
+                        <a href="{% url 'cbv_todo_create' %}" class="nav-button">글쓰기</a>
                     </div>
 {#  로그인 되지 않은 상태라면 로그인 버튼과 회원가입 버튼 노출#}
                 {% else %}
@@ -37,7 +37,7 @@
             {% for todo in page_obj %}
                 <li>
                     <span>{{ todo.title }}</span>
-                    <a href="{% url 'todo_info' todo.id %}">Details</a>
+                    <a href="{% url 'cbv_todo_info' todo.id %}">Details</a>
                 </li>
             {% empty %}
                 <li>No todos available</li>
