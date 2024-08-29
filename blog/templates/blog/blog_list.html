@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <style>
 #pageSelect {
@@ -6,57 +7,45 @@
     padding: 5px;
     font-size: 16px;
 }
+.page-link {
+    padding: 8px 16px;
+    margin: 0 2px;
+    font-size: 14px;
+}
+.page-link.active {
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+}
+.page-item a:hover {
+    text-decoration: none;
+    background-color: #0056b3;
+    color: white;
+    border-radius: 4px;
+}
 </style>
-<h1>블로그 목록</h1>
-    <p style="text-align: right;">
-        <a href="{% url 'blog:create' %}">글 작성</a>
-    </p>
+
+<div class="mt-2">
+    <h1 class="d-inline">블로그 목록</h1>
+    <a href="{% url 'blog:create' %}" class="float-end btn btn-primary">글 작성</a>
+</div>
+
+{% if object_list %}
     {% for blog in object_list %}
-        <p>
-            <a href="{% url 'blog:detail' blog.pk %}">
+        <div class="my-2">
+            <a href="{% url 'blog:detail' blog.pk %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                 No. {{ blog.id }} [{{ blog.get_category_display }}] {{ blog.title }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>작성자: {{ blog.author.username }}</span> - <small>{{ blog.created_at | date:"Y-m-d"}}</small>
             </a>
-        </p>
-
+        </div>
     {% endfor %}
+{% else %}
+    <p>검색 결과가 없습니다.</p>
+{% endif %}
 
-    <form method="get">
-        <a>제목 또는 본문을 검색: </a>
-        <input name='q' type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
-        <button>검색</button>
-    </form>
+<form method="get" class="my-3 d-flex">
+    <input class="form-control-sm ms-2" name='q' type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+    <button class="btn btn-sm btn-info ms-2">검색</button>
+</form>
 
-    <div>
-        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" >&laquo; 첫번째</a>
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
-        {% endif %}
-    {# 현재페이지 -2 가 1 보다 크면 #}
-        {% if page_obj.number|add:-2 > 1 %}
-            <a href="?page={{  page_obj.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
-        {% endif %}
-
-        {% for i in page_obj.paginator.page_range %}
-            {% if page_obj.number == i %}
-                <span style="font-weight: bold"> {{ page_obj.number }} </span>
-            {% elif i > page_obj.number|add:-3 and i < page_obj.number|add:3 %}
-                <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
-            {% endif %}
-        {% endfor %}
-    {# 최대페이지 > 현재페이지+2 일때 #}
-        {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
-            <a href="?page={{  page_obj.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
-        {% endif %}
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
-
-        {% endif %}
-        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">마지막 &raquo;</a>
-        <select id="pageSelect" onchange="location.href='?page=' + this.value;">
-            {% for i in page_obj.paginator.page_range %}
-                <option value="{{ i }}" {% if page_obj.number == i %}selected{% endif %}>{{ i }}</option>
-            {% endfor %}
-        </select>
-    </div>
+{%  include 'pagination.html' %}
 {% endblock %}

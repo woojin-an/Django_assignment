@@ -1,13 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="kr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>블로그 프로젝트</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 </head>
 <body>
-    <nav>
+    <nav class="d-flex justify-content-between py-2 px-4 bg-black text-white">
         <div style="display: flex; justify-content: space-between">
-            <a href="{% url "blog:list" %}">홈으로</a>
+            <a class="text-decoration-none text-white" href="{% url "blog:list" %}">홈으로</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a class="text-decoration-none text-white" href="{% url "admin:index" %}">admin page</a>
         </div>
         <div style="text-align: right">
             <!-- 로그인 되어있을 때 로그아웃 버튼과 ID 나타내기 -->
@@ -15,7 +19,7 @@
                 {{ request.user.username }}
                 <form action="{% url 'logout' %}" method="POST" style="display: inline">
                     {% csrf_token %}
-                    <button>로그아웃</button>
+                    <button class="btn btn-danger btn-sm">로그아웃</button>
                 </form>
 
             <!-- 로그인 되어있지 않을 때 로그인 버튼 나타내기-->
@@ -26,6 +30,13 @@
 
         </div>
     </nav>
-    {% block content %}{% endblock %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+
+    </footer>
+    <script src="{% static "js/bootstrap.bundle.js" %}"></script>
+    {% block js %}{% endblock %}
 </body>
 </html>

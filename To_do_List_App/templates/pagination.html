@@ -1,0 +1,35 @@
+<div>
+    <ul class="pagination justify-content-center">
+        <a class="page-link" href="?page=1{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}" >&laquo; 첫번째</a>
+        {% if page_obj.has_previous %}
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}">Previous</a>
+        {% endif %}
+    {# 현재페이지 -2 가 1 보다 크면 #}
+        {% if page_obj.number|add:-2 > 1 %}
+            <a class="page-link" href="?page={{  page_obj.number|add:-3 }}{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}">&hellip;</a>
+        {% endif %}
+    {#    페이지 번호 #}
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <a class="page-link active"> {{ page_obj.number }} </a>
+            {% elif i > page_obj.number|add:-3 and i < page_obj.number|add:3 %}
+                <a class="page-link" href="?page={{ i }}{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}">{{ i }}</a>
+            {% endif %}
+        {% endfor %}
+    {# 최대페이지 > 현재페이지+2 일때 #}
+        {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
+            <a class="page-link" href="?page={{  page_obj.number|add:3 }}{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}">&hellip;</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}">Next</a>
+
+        {% endif %}
+        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if fragment == 'comment_wrapper' %}#{{ fragment }}{% endif %}">마지막 &raquo;</a>
+        <select id="pageSelect" onchange="location.href='?page=' + this.value;">
+            {% for i in page_obj.paginator.page_range %}
+                <option value="{{ i }}" {% if page_obj.number == i %}selected{% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select>
+    </ul>
+</div>

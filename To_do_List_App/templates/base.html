@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Todo Application{% endblock %}</title>
+    <link href="{% static "css/bootstrap.css" %}" rel="stylesheet">
     <style>
         body {
             background-color: #181818;
@@ -11,7 +13,6 @@
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
@@ -21,7 +22,7 @@
             background-color: #222;
             padding: 2rem;
             border-radius: 8px;
-            max-width: 500px;
+            max-width: 1000px;
             width: 100%;
         }
         h1 {
@@ -63,7 +64,7 @@
             text-decoration: none;
             display: inline-block;
         }
-        
+
     .nav-button {
         background-color: #007bff;
         color: white;
@@ -83,6 +84,24 @@
     </style>
 </head>
 <body>
+    <nav class="d-flex justify-content-between py-2 px-4 bg-black text-white">
+        <div class="d-flex align-items-center">
+            <a class="text-decoration-none text-white me-3" href="{% url 'cbv_todo_list' %}">홈으로</a>
+            <a class="text-decoration-none text-white" href="{% url 'admin:index' %}">admin page</a>
+        </div>
+        <div>
+            {% if request.user.is_authenticated %}
+                <span class="me-3">{{ request.user.username }}</span>
+                <form action="{% url 'logout' %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-light">회원가입</a>
+            {% endif %}
+        </div>
+    </nav>
     <div class="container">
         {% block content %}{% endblock %}
     </div>
