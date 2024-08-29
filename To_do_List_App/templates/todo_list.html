@@ -3,83 +3,30 @@
 {% block title %}Todo List{% endblock %}
 
 {% block content %}
-    <nav style="display: flex; justify-content: space-between; ">
-{# 로그인 된 상태라면? 로그인된 아이디, 로그아웃버튼, 글쓰기 버튼 노출 #}
-        {% if request.user.is_authenticated %}
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                {% if request.user.is_authenticated %}
-                    <div style="font-size: 1rem; ">
-                        {{ request.user.username }}
-                    </div>
-                    <div style="display: flex; gap: 10px; justify-content: flex-end; flex: 1;">
-                        <form action="{% url 'logout' %}" method="POST">
-                            {% csrf_token %}
-                            <button class="nav-button">Logout</button>
-                        </form>
-                        <a href="{% url 'cbv_todo_create' %}" class="nav-button">글쓰기</a>
-                    </div>
-{#  로그인 되지 않은 상태라면 로그인 버튼과 회원가입 버튼 노출#}
-                {% else %}
-                    <div style="display: flex; gap: 10px;">
-                        <a href="{% url 'login' %}" class="nav-button">Login</a>
-                        <a href="{% url 'signup' %}" class="nav-button">회원가입</a>
-                    </div>
-                {% endif %}
-            </div>
 
-        {% endif %}
-    </nav>
 
     <h1>{% if request.user.is_authenticated %}{{ request.user.username }}의{% endif %} Todo List</h1>
 {# to_do_list 10개 씩 노출 #}
     <ul>
         {% if request.user.is_authenticated %}
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-secondary justify-content-end " href="{% url 'cbv_todo_create' %}">Todo 생성</a>
+            </div>
             {% for todo in page_obj %}
                 <li>
                     <span>{{ todo.title }}</span>
                     <a href="{% url 'cbv_todo_info' todo.id %}">Details</a>
+                    | 작성자: {{ todo.author }}
                 </li>
             {% empty %}
-                <li>No todos available</li>
+                <li>항목이 없습니다.</li>
             {% endfor %}
         {% else %}
             <li>회원가입 또는 로그인을 진행해주세요.</li>
         {% endif %}
     </ul>
-    <div>
-       <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" >&laquo; 첫번째</a>
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
-        {% endif %}
-    {# 현재페이지 -2 가 1 보다 크면 #}
-        {% if page_obj.number|add:-2 > 1 %}
-            <a href="?page={{  page_obj.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
-        {% endif %}
-    {#    페이지 번호 #}
-        {% for i in page_obj.paginator.page_range %}
-            {% if page_obj.number == i %}
-                <span style="font-weight: bold"> {{ page_obj.number }} </span>
-            {% elif i > page_obj.number|add:-3 and i < page_obj.number|add:3 %}
-                <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
-            {% endif %}
-        {% endfor %}
-    {# 최대페이지 > 현재페이지+2 일때 #}
-        {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
-            <a href="?page={{  page_obj.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
-        {% endif %}
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
-
-        {% endif %}
-        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">마지막 &raquo;</a>
-        <select id="pageSelect" onchange="location.href='?page=' + this.value;">
-            {% for i in page_obj.paginator.page_range %}
-                <option value="{{ i }}" {% if page_obj.number == i %}selected{% endif %}>{{ i }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
+    {% include 'pagination.html' %}
+    <div class="d-flex justify-content-center">
         <form method="get">
         <a>제목 또는 본문을 검색:
             <label>
