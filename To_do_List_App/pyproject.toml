@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 django = "^5.1"
+django-summernote = "^0.8.20.0"
+pillow = "^10.4.0"
+django-cleanup = "^8.1.0"
 
 
 [build-system]
