@@ -7,6 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from todo.forms import CommentForm
 from todo.models import Todo, Comment
+from todo.forms import TodoForm, TodoUpdateForm, CommentForm
 
 
 class TodoListView(LoginRequiredMixin, ListView):
@@ -58,7 +59,7 @@ class TodoDetailView(LoginRequiredMixin, DetailView):
 class TodoCreateView(LoginRequiredMixin, CreateView):
     model = Todo
     template_name = 'todo_create.html'
-    fields = ('title', 'description', 'start_date', 'end_date')
+    form_class = TodoForm
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -73,7 +74,7 @@ class TodoCreateView(LoginRequiredMixin, CreateView):
 class TodoUpdateView(LoginRequiredMixin, UpdateView):
     model = Todo
     template_name = 'todo_update.html'
-    fields = ('title', 'description', 'start_date', 'end_date')
+    form_class = TodoUpdateForm
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -129,7 +130,7 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
         return obj
 
     def get_success_url(self):
-        return reverse_lazy('cbv_todo_info', kwargs={'pk': self.kwargs['todo_id']})
+        return reverse_lazy('cbv_todo_info', kwargs={'pk': self.object.todo.id})
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
@@ -143,4 +144,4 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
         return obj
 
     def get_success_url(self):
-        return reverse_lazy('cbv_todo_info', kwargs={'pk': self.kwargs['todo_id']})
+        return reverse_lazy('cbv_todo_info', kwargs={'pk': self.object.todo.id})

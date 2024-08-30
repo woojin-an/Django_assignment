@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1 class="mt-2">블로그 {{ sub_title }}</h1>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="btn btn-primary">블로그 {{ btn_name }}</button>
+        <button class="btn btn-primary">블로그 {% if btn_name %}{{ btn_name }}{% else %}저장{% endif %}</button>
 
     </form>
 {% endblock %}

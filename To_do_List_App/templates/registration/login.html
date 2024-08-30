@@ -3,14 +3,63 @@
 {% block title %}Login Page{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 60%;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    .submit-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+    .info-text {
+        margin-top: 10px;
+        display: block;
+    }
+    .info-text a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .info-text a:hover {
+        text-decoration: underline;
+    }
+</style>
+<div class="container mt-lg-5">
     <h1>Login</h1>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
         <button type="submit" class="submit-button">Login</button>
-        <span>
+        <span class="info-text">
             아직 회원이 아니라면 회원가입을 진행해주세요.
             <a href="{% url 'signup' %}">회원가입</a>
         </span>
     </form>
+</div>
 {% endblock %}

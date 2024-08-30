@@ -80,7 +80,7 @@ class BlogDetailView(ListView):
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     template_name = 'blog/blog_form.html'
-    fields = ('category', 'title', 'content')
+    form_class = BlogForm
 
     # form_class = BlogForm
     # success_url = reverse_lazy('cb_blog_detail', kwargs={'pk': object.pk})
@@ -104,7 +104,7 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
 class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     template_name = 'blog/blog_form.html'
-    fields = ('category', 'title', 'content')
+    form_class = BlogForm
 
     # 로그인한 유저와 게시글 작성자가 일치하는지 확인
     def get_queryset(self):
@@ -114,6 +114,9 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
             queryset = queryset.filter(author=self.request.user)
 
         return queryset
+
+    def form_valid(self, form):
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -140,6 +143,8 @@ class BlogDeleteView(LoginRequiredMixin, DeleteView):
             queryset = queryset.filter(author=self.request.user)
 
         return queryset
+
+
 
     def get_success_url(self):
         return reverse_lazy('blog:list')

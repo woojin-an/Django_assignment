@@ -70,16 +70,19 @@ def blog_create(request):
 
 @login_required()
 def blog_update(request, pk):
-    blog = get_object_or_404(Blog, pk=pk)
+    if request.user.is_superuser:
+        blog = get_object_or_404(Blog, pk=pk)
+    else:
+        blog = Blog.objects.get(Blog, pk=pk, author=request.user)
     # if request.user != blog.author:     # 작성자와 로그인정보가 다를 때
     #     raise Http404
-    form = BlogForm(request.POST or None, instance=blog)
+    form = BlogForm(request.POST or None, request.FILES or None, instance=blog)
     if form.is_valid():
+        print(form.cleaned_data)
         blog = form.save()
         return redirect(reverse('fb:detail', kwargs={'pk': blog.pk}))
     context = {
         'form': form,
-        'blog': blog,
     }
     return render(request, "blog/blog_form.html", context)
 
