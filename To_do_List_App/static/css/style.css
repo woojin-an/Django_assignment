@@ -1,0 +1,37 @@
+/* 기본 라이트 테마 */
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.navbar {
+    background-color: #f8f9fa;
+}
+
+/* 다크 테마 */
+body.dark-theme {
+    background-color: #504e4e;
+    color: #e0e0e0;
+}
+
+.navbar.dark-theme {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+.table {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+.navbar.dark-theme .navbar-brand,
+.navbar.dark-theme .navbar-text,
+.navbar.dark-theme .btn {
+    color: #ffffff; /* 내비게이션 바의 글씨 색상 */
+}
+
+.container.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+

@@ -10,7 +10,7 @@ body {
 </style>
 <div class="container" style="margin-top: 50px; width: 60%">
     {% if request.user.is_authenticated %}
-        <form class="form-control" method="POST" enctype="multipart/form-data">
+        <form class="form-control container" method="POST" enctype="multipart/form-data">
             <h2 class="title">Todo 수정하기</h2>
             {% csrf_token %}
             {{ form.as_p }}

@@ -1,65 +1,32 @@
-{% extends 'base.html' %}
-
-{% block title %}Login Page{% endblock %}
-
+{% extends 'registration/base.html' %}
 {% block content %}
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-    }
-    .container {
-        max-width: 60%;
-        margin: auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        font-weight: bold;
-    }
-    .submit-button {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    .submit-button:hover {
-        background-color: #0056b3;
-    }
-    .info-text {
-        margin-top: 10px;
-        display: block;
-    }
-    .info-text a {
-        color: #007bff;
-        text-decoration: none;
-    }
-    .info-text a:hover {
-        text-decoration: underline;
-    }
-</style>
-<div class="container mt-lg-5">
-    <h1>Login</h1>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            {{ form.as_p }}
-        </div>
-        <button type="submit" class="submit-button">Login</button>
-        <span class="info-text">
-            아직 회원이 아니라면 회원가입을 진행해주세요.
-            <a href="{% url 'signup' %}">회원가입</a>
-        </span>
-    </form>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="w-50">
+        <form method="POST">
+            <h2 class="mb-4">Login</h2>
+            {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group row mb-3">
+                    <label class="form-label col-md-2" for="{{ field.auto_id }}">{{ field.label }}</label>
+                    <div class="col-md-10 mb-2">
+                        {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <p>
+                아직 회원이 아니라면 회원가입을 진행해주세요.
+                <a href='{% url 'signup' %}'>회원가입</a>
+            </p>
+        </form>
+    </div>
 </div>
 {% endblock %}

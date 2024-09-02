@@ -4,7 +4,7 @@
 
 {% block content %}
     <h1>새로운 Todo 생성</h1>
-    <form method="POST" class="form-control" enctype="multipart/form-data">
+    <form method="POST" class="form-control container" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="submit-button">Create Todo</button>
