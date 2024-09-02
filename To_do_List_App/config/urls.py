@@ -17,10 +17,12 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 
 from todo.views import todo_list, todo_info, todo_create, todo_update, todo_delete
 from users import views as user_views
+from users.cb_views import LoginView, SignupView, verify_email
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,10 +32,12 @@ urlpatterns = [
     path('create/', todo_create, name='todo_create'),
     path('todo/<int:todo_id>/update/', todo_update, name='todo_update'),
     path('todo/<int:todo_id>/delete/', todo_delete, name='todo_delete'),
+
     # account
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/login/', user_views.login, name='login'),
-    path('accounts/signup/', user_views.sign_up, name='signup'),
+    # path('accounts/login/', user_views.login, name='login'),
+    # path('accounts/signup/', user_views.sign_up, name='signup'),
+    path('users/', include('users.urls')),
 
     # CBV (include)
     path('cbv/', include('todo.urls')),

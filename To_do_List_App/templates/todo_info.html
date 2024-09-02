@@ -24,7 +24,7 @@
         transition: background 0.3s;
     }
 </style>
-<div class="mt-lg-5 custom-container">
+<div class="mt-lg-5 custom-container container">
     {% if request.user == todo.author or request.user.is_superuser %}
         <h1>{{ todo.title }}</h1>
         <div class="d-flex justify-content-end">
@@ -58,7 +58,7 @@
         {% endfor %}
     </table>
 </div>
-<div class="custom-container mt-lg-2" style="color: #181818">
+<div class="container custom-container mt-lg-2" >
     <h2>Comment</h2>
     <hr>
     <form method="POST" action="{% url 'comment_create' todo.id %}" style="display: flex;">
@@ -70,7 +70,7 @@
     </form>
     <ul class="list-unstyled" id="comment_wrapper">
     {% for comment in page_obj %}
-        <li class="comment-list-item container-fluid">
+        <li class="container comment-list-item container-fluid">
             <div class="ps-2 d-flex justify-content-between align-items-center">
                 <p class="mb-0">{{ comment.user }}</p>
                 {% if request.user == comment.user or request.user.is_staff %}
