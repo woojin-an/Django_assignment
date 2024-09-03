@@ -57,16 +57,14 @@ def verify_email(request):
     user = get_object_or_404(User, email=email, is_active=False)
     user.is_active = True
     user.save()
-    # Todo: 나중에 redirect 시키기
-    # return redirect(reverse('login'))
-    return render(request, 'auth/email_verified_done.html', {'user': user})
+    return redirect(reverse('login'))
+    # return render(request, 'auth/email_verified_done.html', {'user': user})
 
 
 class LoginView(FormView):
     template_name = 'auth/login.html'
     form_class = LoginForm
-    # Todo: 나중에 메인페이지 리다이렉트 시키기
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('main')
 
     def form_valid(self, form):
         user = form.user

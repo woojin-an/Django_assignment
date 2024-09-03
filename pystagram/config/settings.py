@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'member',
     # 3rd party
     'django_extensions',
+    'utils',
+    'post',
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,10 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / '.static_root'
 
+# media
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -154,3 +160,5 @@ EMAIL_HOST_PASSWORD = SECRET['email']['password']
 
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
