@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tag %}
 <!DOCTYPE html>
 <html lang="kr">
 <head>
@@ -13,7 +14,7 @@
     {% block style %}{% endblock %}
 </head>
 <body>
-<nav class="d-flex justify-content-between py-2 px-4 bg-black text-white">
+<nav class="d-flex justify-content-between py-2 px-4 bg-black text-white fixed-top">
     <div>
         <a href="{% url 'main' %}" class="btn btn-dark btn-sm">Pystagram</a>
         <a href="http://localhost:8000/admin/" class="btn btn-dark btn-sm">admin page</a>
@@ -22,6 +23,7 @@
 {#    로그인 했을 때#}
         {% if request.user.is_authenticated %}
             <div>
+                <a href="{% url 'profile:detail' request.user.nickname %}" class="me-2 btn btn-dark btn-sm">{{ request.user.nickname }}</a>
                 <a class="btn btn-sm btn-info" href="{% url 'create' %}">새 글 작성</a>
             
             <form action="{% url 'logout' %}" method="POST" class="d-inline ms-2">
