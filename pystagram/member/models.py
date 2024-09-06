@@ -34,8 +34,13 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     nickname = models.CharField('nickname', max_length=20, unique=True)
     # followers = models.ManyToManyField('self', symmetrical=False, related_name='followers')
-    following = models.ManyToManyField('self', symmetrical=False, related_name='followers', through='UserFollowing', through_fields=('from_user', 'to_user'))
+    following = models.ManyToManyField(
+        'self', symmetrical=False, related_name='followers',
+        through='UserFollowing', through_fields=('from_user', 'to_user')
+    )
+
     objects = UserManager()
+
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
